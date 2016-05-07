@@ -4,8 +4,8 @@ Benchmark project for measuring the Garbage Collector performance in various con
 There are 4 test scenarios:
 - allocating objects with fixed size using only 1 thread
 - allocating objects with fixed size using multiple threads
-- allocating objects with various size using only 1 thread
-- allocating objects with various size using multiple threads
+- allocating objects with varying size using only 1 thread
+- allocating objects with varying size using multiple threads
 
 Each one will be ran using several GC configurations:
 - GC type - ParallelOld vs CMS vs G1
