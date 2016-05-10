@@ -17,4 +17,5 @@ My results are available in `results.pdf`
 ## running the project
 
 `sh benchmark.sh`  
-Please be patient
+ 
+The whole process takes about 30 minutes on a mobile Core i7 machine!
