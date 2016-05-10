@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Benchmark script compares various GarbageCollector configurations"
-echo "(Please be batient as the whole process takes about 10 minutes on a mobile Core i7 machine)"
+echo "(Please be patient as the whole process takes about 30 minutes on a mobile Core i7 machine)"
 
 mvn clean compile -q
 
@@ -13,4 +13,69 @@ for i in {1..10}
     done
 
 # actual testing
-mvn exec:java -Dexec.args="100000 1000 true" -q
+###########################
+
+allocs=40000
+step=1000
+
+# ParallelOld
+echo "Executing benchmark for ParallelOld GC mode"
+mkdir -p ParallelOld/{128,256,512}
+
+echo "Executing benchmark for ParallelOld GC mode - heap size 128m"
+export MAVEN_OPTS="-XX:+UseParallelOldGC -Xms128m -Xmx128m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv ParallelOld/128/
+
+echo "Executing benchmark for ParallelOld GC mode - heap size 256m"
+export MAVEN_OPTS="-XX:+UseParallelOldGC -Xms256m -Xmx256m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv ParallelOld/256/
+
+echo "Executing benchmark for ParallelOld GC mode - heap size 512m"
+export MAVEN_OPTS="-XX:+UseParallelOldGC -Xms512m -Xmx512m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv ParallelOld/512/
+
+
+# CMS
+echo "Executing benchmark for CMS GC mode"
+mkdir -p CMS/{128,256,512}
+
+echo "Executing benchmark for CMS GC mode - heap size 128m"
+export MAVEN_OPTS="-XX:+UseConcMarkSweepGC -Xms128m -Xmx128m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv CMS/128/
+
+echo "Executing benchmark for CMS GC mode - heap size 256m"
+export MAVEN_OPTS="-XX:+UseConcMarkSweepGC -Xms256m -Xmx256m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv CMS/256/
+
+echo "Executing benchmark for CMS GC mode - heap size 512m"
+export MAVEN_OPTS="-XX:+UseConcMarkSweepGC -Xms512m -Xmx512m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv CMS/512/
+
+
+# G1
+echo "Executing benchmark for G1 GC mode"
+mkdir -p G1/{128,256,512}
+
+echo "Executing benchmark for G1 GC mode - heap size 128m"
+export MAVEN_OPTS="-XX:+UseG1GC -Xms128m -Xmx128m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv G1/128/
+
+echo "Executing benchmark for G1 GC mode - heap size 256m"
+export MAVEN_OPTS="-XX:+UseG1GC -Xms256m -Xmx256m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv G1/256/
+
+echo "Executing benchmark for G1 GC mode - heap size 512m"
+export MAVEN_OPTS="-XX:+UseG1GC -Xms512m -Xmx512m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv G1/512/
+
+
+echo "Benchmark completed. Result .csv files are in ParallelOld, CMS and G1 directories"
