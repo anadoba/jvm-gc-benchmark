@@ -1,5 +1,7 @@
 # jvm-gc-benchmark
 
+#TODO - ADD Shenandoah Tests. 
+
 Benchmark project for measuring the Garbage Collector performance in various configurations. 
 There are 4 test scenarios:
 - allocating objects with fixed size using only 1 thread
