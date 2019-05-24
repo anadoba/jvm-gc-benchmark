@@ -24,9 +24,8 @@ mkdir -p ParallelOld/{128,256,512}
 
 echo "Executing benchmark for ParallelOld GC mode - heap size 128m"
 export MAVEN_OPTS="-XX:+UseParallelOldGC -Xms128m -Xmx128m"
-mvn exec:java -Dexec.args="$allocs $step true" -q
-mv *.csv ParallelOld/128/
 
+mvn exec:java -Dexec.args="$allocs $step true" -q
 echo "Executing benchmark for ParallelOld GC mode - heap size 256m"
 export MAVEN_OPTS="-XX:+UseParallelOldGC -Xms256m -Xmx256m"
 mvn exec:java -Dexec.args="$allocs $step true" -q
@@ -77,5 +76,24 @@ export MAVEN_OPTS="-XX:+UseG1GC -Xms512m -Xmx512m"
 mvn exec:java -Dexec.args="$allocs $step true" -q
 mv *.csv G1/512/
 
+# Shenandoah(JDK-12)
+echo "Executing benchmark for Shenandoah GC mode"
+mkdir -p Shenandoah/{128,256,512}
+
+echo "Executing benchmark for Shenandoah mode - heap size 128m"
+export MAVEN_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC -Xms128m -Xmx128m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv Shenandoah/128/
+
+echo "Executing benchmark for Shenandoah mode - heap size 256m"
+export MAVEN_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC
+-XX:ShenandoahUncommitDelay=1000  -Xms256m -Xmx256m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv Shenandoah/256/
+
+echo "Executing benchmark for Shenandoah mode - heap size 512m"
+export MAVEN_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC -Xms512m -Xmx512m"
+mvn exec:java -Dexec.args="$allocs $step true" -q
+mv *.csv Shenandoah/512/
 
 echo "Benchmark completed. Result .csv files are in ParallelOld, CMS and G1 directories"
